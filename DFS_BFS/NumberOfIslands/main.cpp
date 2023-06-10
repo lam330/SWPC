@@ -61,8 +61,6 @@ void sink_island_BFS(vector<vector<int>> &grid, const int &r, const int &c, queu
 
             showq(myQueue);
         }
-
-
     }
 }
 
