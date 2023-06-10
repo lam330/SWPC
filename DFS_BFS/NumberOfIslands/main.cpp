@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <list>
 using namespace std;
 
 void showMatrix(vector<vector<int>> &grid) {
@@ -26,22 +27,42 @@ void showMatrix(vector<vector<int>> &grid) {
 
 //}
 
+void showq(queue<pair<int, int>> gq)
+{
+    queue<pair<int, int>> g = gq;
+    while (!g.empty()) {
+        cout << '\t' << g.front().first << "  " << g.front().second;
+        g.pop();
+    }
+    cout << '\n';
+}
+
 
 //BFS
-void sink_island_BFS(vector<vector<int>> &grid, const int &r, const int &c) {
-    queue<pair<int, int>> myQueue;
+void sink_island_BFS(vector<vector<int>> &grid, const int &r, const int &c, queue<pair<int, int>> myQueue) {
+
     myQueue.push({r, c});
+    cout << "push Queue: " << r << "  " << c << endl;
 
     while(!myQueue.empty()) {
+        int x = myQueue.front().first;
+        int y = myQueue.front().second;
+        cout << "front " << x << " " << y << endl;
         myQueue.pop();
-        if(((r > 0) && (r < grid.size()) && ((c > 0) && (c < grid[0].size())) && (grid[r][c] == 1))) {
-            grid[r][c] = 0;//mark
+
+        if(((x >= 0) && (x < grid.size()) && ((y >= 0) && (y < grid[0].size())) && (grid[x][y] == 1))) {
+            cout << "neighbor: " << x << " " << y << endl;
+            grid[x][y] = 0;//mark
             //Add neighbors
-            myQueue.push({r, c - 1});//left
-            myQueue.push({r, c + 1});//right
-            myQueue.push({r - 1, c});//up
-            myQueue.push({r + 1, c});//down
+            myQueue.push({x, y - 1});//left
+            myQueue.push({x, y + 1});//right
+            myQueue.push({x - 1, y});//up
+            myQueue.push({x + 1, y});//down
+
+            showq(myQueue);
         }
+
+
     }
 }
 
@@ -50,13 +71,15 @@ int numberOfIsland(vector<vector<int>> &grid) {
     int cols = grid[0].size();
     int count = 0;
 
+    queue<pair<int, int>> myQueue;
+
     //loop all
     for(int i = 0; i < rows; i++) {
         for(int j = 0; j < cols; j++) {
             if(grid[i][j] == 1) {
                 //mark land visited
                 cout << "numberOfIsland " << i << " " << j << endl;
-                sink_island_BFS(grid, i, j);
+                sink_island_BFS(grid, i, j, myQueue);
                 ++count;
             }
         }
@@ -80,6 +103,8 @@ int main()
     grid[1][0] = 1;
     grid[1][1] = 1;
     grid[2][3] = 1;
+    grid[0][3] = 1;
+
 
     showMatrix(grid);
 
